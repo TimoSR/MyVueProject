@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import PiniaCounterButton from "./components/PiniaCounter/PiniaCounterButton.vue";
-import SimpleCounterButton from "./components/SimpleCounter/SimpleCounterButton.vue";
 import CounterButton from "./components/Counter/CounterButton.vue";
 </script>
 
@@ -13,7 +11,7 @@ import CounterButton from "./components/Counter/CounterButton.vue";
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <PiniaCounterButton msg="Vite + Vue" />
+  <CounterButton msg="Vite + Vue" />
 </template>
 
 <style scoped>

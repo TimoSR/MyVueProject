@@ -15,7 +15,7 @@ export interface ICounter {
 export class Counter implements ICounter {
 
     //private _something: number = ref(0);
-    private _value = reactive<Value>({
+    private _value: Value = reactive<Value>({
         count: 0,
         maxLimit: 0
     });

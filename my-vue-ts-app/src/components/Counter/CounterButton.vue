@@ -9,8 +9,9 @@
 
 <script setup lang="ts">
 import {Counter, type ICounter} from "./Counter.ts";
+import {reactive} from "vue";
 
-const counter: ICounter = new Counter(0, 10);
+const counter: ICounter = reactive<ICounter>(new Counter(0, 10));
 
 </script>
 
