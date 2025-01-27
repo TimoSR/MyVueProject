@@ -64,7 +64,7 @@ export namespace PiniaCounter {
 
     export const useCounterStore = defineStore('counter', () => {
 
-        const counterInstance = reactive(new Counter(0, 10));
+        const counterInstance: ICounter = reactive<ICounter>(new Counter(0, 10));
 
         return {
             value: computed(() => counterInstance.value),

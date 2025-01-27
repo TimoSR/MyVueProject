@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import CounterButton from "./components/Counter/CounterButton.vue";
+import PiniaCounterButton from "./components/PiniaCounter/PiniaCounterButton.vue";
+import SimpleCounterButton from "./components/SimpleCounter/SimpleCounterButton.vue";
 </script>
 
 <template>
@@ -12,6 +14,9 @@ import CounterButton from "./components/Counter/CounterButton.vue";
     </a>
   </div>
   <CounterButton msg="Vite + Vue" />
+  <CounterButton msg="Vite + Vue" />
+  <SimpleCounterButton msg="Vite + Vue" />
+  <PiniaCounterButton msg="Vite + Vue" />
 </template>
 
 <style scoped>
