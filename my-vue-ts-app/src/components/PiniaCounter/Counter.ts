@@ -34,11 +34,6 @@ export namespace PiniaCounter {
                 immediate: false,
                 flush: "post"
             });
-
-            // Bind methods to avoid `this` context issues
-            this.increment = this.increment.bind(this);
-            this.decrement = this.decrement.bind(this);
-            this.reset = this.reset.bind(this);
         }
 
         increment(): void {
