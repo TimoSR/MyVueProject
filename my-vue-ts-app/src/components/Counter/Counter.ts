@@ -12,7 +12,7 @@ export interface ICounter {
     get value(): number;
 }
 
-export default class Counter implements ICounter {
+export class Counter implements ICounter {
 
     //private _something: number = ref(0);
     private _value = reactive<Value>({
