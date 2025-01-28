@@ -1,57 +1,48 @@
-<script lang="ts">
-import { defineComponent, ref, onMounted, computed } from "vue";
+<script setup lang="ts">
+import { ref, onMounted, computed } from "vue";
 
-export default defineComponent({
-  name: "PlayerKillTable",
-  setup() {
-    const fileContent = ref<string>(""); // Raw log content
-    const playerKills = ref<Map<string, number>>(new Map()); // Tracks kills for each player
-    const errorMessage = ref<string | null>(null); // Error messages
+const fileContent = ref<string>(""); // Raw log content
+const playerKills = ref<Map<string, number>>(new Map()); // Tracks kills for each player
+const errorMessage = ref<string | null>(null); // Error messages
 
-    onMounted(async () => {
-      try {
-        // Fetch the nuke.txt file
-        const response = await fetch("/nuke.txt");
-        if (!response.ok) {
-          throw new Error(`Failed to load file: ${response.statusText}`);
-        }
+// Fetch and process log file
+const fetchLogFile = async () => {
+  try {
+    const response = await fetch("/nuke.txt");
+    if (!response.ok) {
+      throw new Error(`Failed to load file: ${response.statusText}`);
+    }
 
-        // Read the file content
-        const rawContent = await response.text();
-        fileContent.value = rawContent;
+    const rawContent = await response.text();
+    fileContent.value = rawContent;
+    processKillData(rawContent); // Process log content
+  } catch (error) {
+    errorMessage.value = (error as Error).message;
+  }
+};
 
-        // Process the file content to calculate kills
-        processKillData(rawContent);
-      } catch (error) {
-        errorMessage.value = (error as Error).message;
-      }
-    });
+// Parse kills from the log file
+const processKillData = (content: string) => {
+  const killPattern = /"(.+?)<\d+><STEAM_[^>]+><[^>]+>" .*?killed "(.+?)<\d+><STEAM_[^>]+><[^>]+>"/g;
+  const killsMap = new Map<string, number>();
 
-    // Function to process and calculate kills from log data
-    const processKillData = (content: string) => {
-      const killPattern =
-          /"(.+?)<\d+><STEAM_[^>]+><[^>]+>" .*?killed "(.+?)<\d+><STEAM_[^>]+><[^>]+>"/g;
-      const killsMap = new Map<string, number>();
+  let match;
+  while ((match = killPattern.exec(content)) !== null) {
+    const killer = match[1]; // Extract killer's name
+    killsMap.set(killer, (killsMap.get(killer) || 0) + 1); // Increment kills
+  }
 
-      let match;
-      while ((match = killPattern.exec(content)) !== null) {
-        const killer = match[1]; // Extract killer's name
-        killsMap.set(killer, (killsMap.get(killer) || 0) + 1); // Increment kills
-      }
+  playerKills.value = killsMap;
+};
 
-      playerKills.value = killsMap;
-    };
+// Computed property to sort players by kills
+const sortedPlayerKills = computed(() =>
+    Array.from(playerKills.value.entries()).sort((a, b) => b[1] - a[1])
+);
 
-    // Computed property to convert Map to a sorted array for rendering
-    const sortedPlayerKills = computed(() =>
-        Array.from(playerKills.value.entries()).sort((a, b) => b[1] - a[1])
-    );
-
-    return {
-      errorMessage,
-      sortedPlayerKills,
-    };
-  },
+// Fetch the log file on component mount
+onMounted(() => {
+  fetchLogFile();
 });
 </script>
 
@@ -59,7 +50,7 @@ export default defineComponent({
   <div class="flex justify-center items-center min-h-screen bg-gray-100">
     <div class="bg-white rounded-lg shadow-md p-6 w-full max-w-4xl">
       <h1 class="text-3xl font-semibold text-gray-800 text-center mb-6">
-        Player Kill Table
+        Player Kills
       </h1>
 
       <!-- Display error message if any -->
